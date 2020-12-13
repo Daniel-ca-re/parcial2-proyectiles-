@@ -15,9 +15,10 @@ escenario::escenario(float dist, float hD, float hO, float VO[3], float VD[3])
     float array2 [2]={dist,hO-hD};
     proyectil BO(array2,array);
     balaO=BO;
+    balaI=BO;
     radD=0.025*dist;
     radO=0.05*dist;
-    radDO=0.005*dist;
+    radI=0.005*dist;
     delayD=2;
     delayO=1;
     for (int i=0;i<4;i++)

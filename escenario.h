@@ -10,11 +10,12 @@ class escenario
 private:
     proyectil balaD;
     proyectil balaO;
+    proyectil balaI;
 
     float delayO;
     float delayD;
 
-    float radDO;
+    float radI;
     float radD;
     float radO;
 
