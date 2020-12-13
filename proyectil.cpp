@@ -27,6 +27,7 @@ void proyectil::avanza(float t)
     pos[0]+=vel[0]*t;
     vel[1]+=ace[1]*t;
     vel[0]+=ace[0]*t;
+    tiempo+=t;
 }
 
 void proyectil::set_new_inPOS(float ipos[])
@@ -48,4 +49,10 @@ void proyectil::get_Started()
     vel[0]=inVEL[0];
     vel[1]=inVEL[1];
     tiempo=0;
+}
+
+std::array<float, 2> proyectil::getinPOS()
+{
+    std::array<float , 2> a ={inPOS[0],inPOS[1]};
+    return a;
 }

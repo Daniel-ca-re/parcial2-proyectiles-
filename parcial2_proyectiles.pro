@@ -4,8 +4,10 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        escenario.cpp \
         main.cpp \
         proyectil.cpp
 
 HEADERS += \
+    escenario.h \
     proyectil.h
