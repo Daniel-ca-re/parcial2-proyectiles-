@@ -1,6 +1,9 @@
 #include "escenario.h"
 #include "proyectil.h"
 #include "math.h"
+#include <stdlib.h>
+#include <time.h>
+#include <list>
 
 escenario::escenario()
 {
@@ -29,10 +32,14 @@ escenario::escenario(float dist, float hD, float hO, float VO[3], float VD[3])
 
 }
 
+
+
+
+
 std::array<float,2> escenario::getOshot(int i)
 {
     float velocidad[2];
-    for (float angO=90;angO<180;angO+=0.001)
+    for (float angO=90;angO<180;angO+=0.01)
     {
 
         velocidad[0]=velO[i]*cos(3.1416*(angO/180));
@@ -42,7 +49,7 @@ std::array<float,2> escenario::getOshot(int i)
         while(balaO.pos[1]>=0)
         {
 
-            balaO.avanza(0.001);
+            balaO.avanza(0.01);
             if( sqrt( pow(balaD.getinPOS()[0]-balaO.pos[0],2)+ pow(balaD.getinPOS()[1]-balaO.pos[1],2) )<radO )
             {
                 std::array<float,2> a={angO,balaO.tiempo};
@@ -57,7 +64,7 @@ std::array<float,2> escenario::getOshot(int i)
 std::array<float,2> escenario::getDshot(int i)
 {
     float velocidad[2];
-    for (float angD=0;angD<90;angD+=0.001)
+    for (float angD=0;angD<90;angD+=0.01)
     {
 
         velocidad[0]=velD[i]*cos(3.1416*(angD/180));
@@ -67,7 +74,7 @@ std::array<float,2> escenario::getDshot(int i)
         while(balaD.pos[1]>=0)
         {
 
-            balaD.avanza(0.001);
+            balaD.avanza(0.01);
             if( sqrt( pow(balaO.getinPOS()[0]-balaD.pos[0],2)+ pow(balaO.getinPOS()[1]-balaD.pos[1],2) )<radD )
             {
                 std::array<float,2> a={angD,balaD.tiempo};
@@ -77,4 +84,129 @@ std::array<float,2> escenario::getDshot(int i)
     }
     std::array<float,2> a={-1,-1};
     return a;
+}
+
+
+std::array<float,4> escenario::getDshotInOshot(int i)
+//retorna la informacion angO, angD y tiempo
+{
+    using namespace std;
+    list <int> idnt={0,1,2};
+    while(idnt.size()!=0)
+    {
+        auto I= idnt.begin();
+        srand(time(NULL));
+        int n=rand()%idnt.size();
+        advance(I,n);
+        array <float,2> infSO =getOshot(*I);
+
+        if(infSO[1]+infSO[2]==-2)
+        {
+            idnt.erase(I);
+        }
+        else
+        {
+            float tlim=balaO.tiempo;
+            for(float desfaExtra=0;desfaExtra<tlim;desfaExtra+=0.1)
+            {
+                float velocidad[2];
+                for (float angD=0;angD<90;angD+=0.01)
+                {
+
+                    velocidad[0]=velD[i]*cos(3.1416*(angD/180));
+                    velocidad[1]=velD[i]*sin(3.1416*(angD/180));
+                    balaD.set_new_invel(velocidad);
+                    balaD.get_Started();
+                    balaO.get_Started();
+                    balaO.avanza(delayD+desfaExtra);
+                    while(balaD.pos[1]>=0)
+                    {
+
+                        balaD.avanza(0.01);
+                        balaO.avanza(0.01);
+                        if( sqrt( pow(balaD.getinPOS()[0]-balaO.pos[0],2)+ pow(balaD.getinPOS()[1]-balaO.pos[1],2) )>radO
+                                && sqrt( pow(balaD.pos[0]-balaO.pos[0],2)+ pow(balaD.pos[1]-balaO.pos[1],2) )<radD
+                                && sqrt( pow(balaD.getinPOS()[0]-balaD.pos[0],2)+ pow(balaD.getinPOS()[1]-balaD.pos[1],2) )>radD)
+                        {
+                            std::array<float,4> a={infSO[0],desfaExtra,angD,balaD.tiempo};
+                            return a;
+                        }
+                    }
+                }
+            }
+            std::array<float,4> a={infSO[0],-1,-1,-1};
+            return a;
+
+        }
+        if(idnt.size()==0)
+        {
+            array <float,4> result={-1,-1,-1,-1};
+            return result;
+        }
+
+    }
+
+}
+
+std::array<float,4> escenario::getDshotInOshot2(int i)
+//retorna la informacion angO, angD y tiempo
+{
+    using namespace std;
+    list <int> idnt={0,1,2};
+    while(idnt.size()!=0)
+    {
+        auto I= idnt.begin();
+        srand(time(NULL));
+        int n=rand()%idnt.size();
+        advance(I,n);
+        array <float,2> infSO =getOshot(*I);
+
+        if(infSO[1]+infSO[2]==-2)
+        {
+            idnt.erase(I);
+        }
+        else
+        {
+            float tlim=balaO.tiempo;
+            for(float desfaExtra=0;desfaExtra<tlim;desfaExtra+=0.1)
+            {
+                float velocidad[2];
+                for (float angD=0;angD<90;angD+=0.01)
+                {
+
+                    velocidad[0]=velD[i]*cos(3.1416*(angD/180));
+                    velocidad[1]=velD[i]*sin(3.1416*(angD/180));
+                    balaD.set_new_invel(velocidad);
+                    balaD.get_Started();
+                    balaO.get_Started();
+                    balaO.avanza(delayD+desfaExtra);
+                    while(balaD.pos[1]>=0)
+                    {
+
+                        balaD.avanza(0.01);
+                        balaO.avanza(0.01);
+                        if( sqrt( pow(balaD.getinPOS()[0]-balaO.pos[0],2)+ pow(balaD.getinPOS()[1]-balaO.pos[1],2) )>radO
+                                && sqrt( pow(balaD.getinPOS()[0]-balaD.pos[0],2)+ pow(balaD.getinPOS()[1]-balaD.pos[1],2) )>radD
+                                && sqrt( pow(balaD.pos[0]-balaO.pos[0],2)+ pow(balaD.pos[1]-balaO.pos[1],2) )<radD
+                                && sqrt( pow(balaO.getinPOS()[0]-balaD.pos[0],2)+ pow(balaO.getinPOS()[1]-balaD.pos[1],2) )>radD
+                                )
+                        {
+                            std::array<float,4> a={infSO[0],desfaExtra,angD,balaD.tiempo};
+                            return a;
+                        }
+                    }
+                }
+            }
+            std::array<float,4> a={infSO[0],-1,-1,-1};
+            return a;
+
+        }
+        if(idnt.size()==0)
+        {
+            array <float,4> result={-1,-1,-1,-1};
+            return result;
+        }
+
+    }
+
 }

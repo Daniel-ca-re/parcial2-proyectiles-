@@ -27,6 +27,8 @@ public:
     escenario(float dist,float hD,float hO,float VO [3], float VD[3]);
     std::array <float,2> getDshot(int);
     std::array <float,2> getOshot(int);
+    std::array <float,4> getDshotInOshot(int i);
+    std::array <float,4> getDshotInOshot2(int i);
 };
 
 #endif // ESCENARIO_H
