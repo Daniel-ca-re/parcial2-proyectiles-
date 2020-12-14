@@ -89,7 +89,7 @@ std::array<float,2> escenario::getDshot(int i)
 }
 
 
-std::array<float,5> escenario::getDshotInOshot(int i)
+std::array<float,5> escenario::getDshotInObase(int i)
 //retorna la informacion angO,velO, defase, angD y tiempo
 {
     using namespace std;
@@ -102,7 +102,7 @@ std::array<float,5> escenario::getDshotInOshot(int i)
         advance(I,n);
         array <float,2> infSO =getOshot(*I);
 
-        if(infSO[1]+infSO[2]==-2)
+        if(infSO[1]==-1)
         {
             idnt.erase(I);
         }
@@ -148,7 +148,7 @@ std::array<float,5> escenario::getDshotInOshot(int i)
 
 }
 
-std::array<float,5> escenario::getDshotInOshot2(int i)
+std::array<float,5> escenario::getDshotInObase2(int i)
 //retorna la informacion angO,velO, defase, angD y tiempo
 {
     using namespace std;
@@ -161,7 +161,7 @@ std::array<float,5> escenario::getDshotInOshot2(int i)
         advance(I,n);
         array <float,2> infSO =getOshot(*I);
 
-        if(infSO[1]+infSO[2]==-2)
+        if(infSO[1]==-1)
         {
             idnt.erase(I);
         }
@@ -219,7 +219,7 @@ std::array<float, 8> escenario::getOshotInDshot(int i)
         srand(time(NULL));
         int n=rand()%idnt.size();
         advance(I,n);
-        array <float,5> inf =getDshotInOshot2(*I);
+        array <float,5> inf =getDshotInObase2(*I);
 
         if(inf[4]==-1)
         {
